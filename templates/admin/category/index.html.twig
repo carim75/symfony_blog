@@ -22,6 +22,8 @@
                        class="btn btn-primary">
                         Modifier
                     </a>
+                    <a href="{{ path('admin_category_delete',{id: category.id}) }}"
+                       class="btn btn-danger">Supprimer</a>
                 </td>
             </tr>
         {% endfor %}

@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Form\ConfirmationType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -93,5 +94,30 @@ class CategoryController extends AbstractController
             ]
         );
 
+    }
+
+    /**
+     * @Route ("/suppression/{id}", name="admin_category_delete")
+     * Le ParamConverter (installé grace a sensio/frameowrk-extra-bunble
+     * permet de convertir les parametres des routes.
+     * Ici, il va rechercher la category en fonction de l'id présent dans ladresse
+     */
+    public function delete(Category $category, Request $request, EntityManagerInterface $em)
+    {
+        $form = $this->createForm(ConfirmationType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $em->remove($category);    //persist pour ajouter ,remove pour suprimer
+            $em->flush();     //flush pour valider notre action
+
+            $this->addFlash('info','la catégorie ' . $category->getName() . 'a été supprimée');
+            return $this->redirectToRoute('app_admin_category_index');
+        }
+
+        return $this->render('admin/category/delete.html.twig', [
+            'delete_form' => $form->createView(),
+            'category' => $category,
+        ]);
     }
 }
