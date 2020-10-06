@@ -7,7 +7,7 @@
 {% block body %}
     <h1>Modifier l'article"{{ article.title }}"</h1>
  {% if article.publishedAt is not null %}
-     
+
      <p>
          publié le {{ article.publishedAt|date('d/m/Y') }}
          à {{ article.publishedAt|date('H:i') }}.
